@@ -68,7 +68,10 @@ services:
     depends_on:
       spark:
         condition: service_healthy
-
+    labels:
+      caddy: dashboard.openelis-global.org
+      caddy.handle_path: /pipelines/*
+      caddy.handle_path.0_reverse_proxy: "{{ upstreams 8080 }}"
   spark:
     image: docker.io/bitnami/spark:3.3
     container_name: spark-thriftserver
@@ -100,7 +103,13 @@ services:
       retries: 10
       start_period: 5s
       timeout: 60s
-
+    labels:
+      caddy_0: dashboard.openelis-global.org
+      caddy_0.handle_path: /spark-ui/*
+      caddy_0.handle_path.0_reverse_proxy: "{{ upstreams 4040 }}"
+      caddy_1: dashboard.openelis-global.org
+      caddy_1.handle_path: /spark-server/*
+      caddy_1.handle_path.0_reverse_proxy: "{{ upstreams 10000 }}"
 
 volumes:
   spark_vol_single:
