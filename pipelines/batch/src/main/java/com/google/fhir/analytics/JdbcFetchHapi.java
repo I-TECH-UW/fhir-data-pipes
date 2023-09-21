@@ -345,6 +345,7 @@ public class JdbcFetchHapi {
         builder.append(" AND res.res_updated > '").append(since).append("'");
       }
       try (Connection connection = jdbcSource.getConnection();
+
           PreparedStatement statement =
               createPreparedStatement(connection, builder.toString(), resourceType);
           ResultSet resultSet = statement.executeQuery()) {

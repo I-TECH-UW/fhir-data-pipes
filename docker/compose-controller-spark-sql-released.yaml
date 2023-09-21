@@ -56,6 +56,7 @@ services:
   pipeline-controller:
     image: us-docker.pkg.dev/cloud-build-fhir/fhir-analytics/main:latest
     container_name: pipeline-controller
+    entrypoint: java -Xms6g -Xmx6g -jar /app/controller.jar --debug
     volumes:
       - ${PIPELINE_CONFIG}:/app/config:ro
       - ${DWH_ROOT}:/dwh
@@ -67,7 +68,16 @@ services:
     depends_on:
       spark:
         condition: service_healthy
-
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
   spark:
     image: docker.io/bitnami/spark:3.3
     container_name: spark-thriftserver
@@ -75,7 +85,7 @@ services:
       - sbin/start-thriftserver.sh
       - --driver-memory
       # You may need to increase this if your queries/data are too large.
-      - 5g
+      - 10g
     environment:
       - HIVE_SERVER2_THRIFT_PORT=10000
     ports:
@@ -99,6 +109,11 @@ services:
       retries: 10
       start_period: 5s
       timeout: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
 
 
 volumes:

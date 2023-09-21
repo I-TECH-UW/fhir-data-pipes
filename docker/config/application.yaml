@@ -22,16 +22,16 @@ fhirdata:
   # `hapi-server` is another docker example where a container with that name is
   # running on the same docker network.
   #fhirServerUrl: "http://hapi-server:8080/fhir"
-  fhirServerUrl: "https://hub.openelis-global.org:5000/fhir"
-  fhirServerPassword: "pipeline"
-  fhirServerUserName: "pipeline"
+  fhirServerUrl: "https://hub.openelis-global.org/openhimcore/fhir"
+  fhirServerPassword: "data-pipes"
+  fhirServerUserName: "data-pipes"
   #dbConfig: "config/hapi-postgres-config_local.json"
-  dbConfig: "config/_config.json"
+  #dbConfig: "config/_config.json"
   dwhRootPrefix: "/dwh/controller_DWH"
   incrementalSchedule: "0 0 * * * *"
   purgeSchedule: "0 30 * * * *"
   numOfDwhSnapshotsToRetain: 2
-  resourceList: "Patient,Encounter,Observation"
+  resourceList: "Patient,ServiceRequest"
   maxWorkers: 1
   numThreads: -1
   createHiveResourceTables: true

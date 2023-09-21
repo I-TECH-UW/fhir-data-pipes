@@ -25,10 +25,17 @@ services:
       POSTGRES_USER: 'admin'
       POSTGRES_PASSWORD: 'admin'
     volumes:
-      - hapi-fhir-db:/var/lib/postgresql/data
+      - hapi-fhir-db-small:/var/lib/postgresql/data
     networks:
       - cloudbuild
       - default
+
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
     
   hapi-server:
     # Using an older version as the latest image broke our build.
@@ -50,9 +57,15 @@ services:
     networks:
       - cloudbuild
       - default
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
       
 volumes:
   hapi-fhir-db:
+  hapi-fhir-db-small:
   hapi-server:
 
 networks:
