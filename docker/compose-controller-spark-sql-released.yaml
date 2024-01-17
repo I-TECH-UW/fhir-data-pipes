@@ -54,9 +54,9 @@ version: '2.4'
 
 services:
   pipeline-controller:
-    image: us-docker.pkg.dev/cloud-build-fhir/fhir-analytics/main:latest
+    image: us-docker.pkg.dev/cloud-build-fhir/fhir-analytics/main:0.2.1
     container_name: pipeline-controller
-    entrypoint: java -Xms6g -Xmx6g -jar /app/controller.jar --debug
+    entrypoint: java -Xms6g -Xmx6g -jar /app/controller.jar
     volumes:
       - ${PIPELINE_CONFIG}:/app/config:ro
       - ${DWH_ROOT}:/dwh
@@ -77,9 +77,9 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: 4G
+          memory: 10G
     labels:
-      caddy: dashboard.openelis-global.org
+      caddy: dashboard.cihis.org
       caddy.reverse_proxy: "{{ upstreams 8080 }}"      
   spark:
     image: docker.io/bitnami/spark:3.3
@@ -92,7 +92,7 @@ services:
     environment:
       - HIVE_SERVER2_THRIFT_PORT=10000
     ports:
-      - '10001:10000'
+      - '10000:10000'
       - '4041:4040'
     volumes:
       - ${DWH_ROOT}:/dwh
@@ -116,12 +116,12 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: 4G
+          memory: 11G
     labels:
-      caddy_0: dashboard.openelis-global.org
+      caddy_0: dashboard.cihis.org
       caddy_0.handle_path: /spark-ui/*
       caddy_0.handle_path.0_reverse_proxy: "{{ upstreams 4040 }}"
-      caddy_1: dashboard.openelis-global.org
+      caddy_1: dashboard.cihis.org
       caddy_1.handle_path: /spark-server/*
       caddy_1.handle_path.0_reverse_proxy: "{{ upstreams 10000 }}"
 
@@ -130,5 +130,5 @@ volumes:
 
 networks:
   cloudbuild:
-    external: true
+    # external: true
     name: cloudbuild # Needed for Continuous integration
