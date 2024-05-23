@@ -129,8 +129,7 @@ public class DataProperties {
         "At least one of fhirServerUrl or dbConfig should be set!");
 
     Preconditions.checkArgument(
-        !Strings.isNullOrEmpty(fhirSinkPath) || !Strings.isNullOrEmpty(dwhRootPrefix),
-        "At least one of fhirSinkPath or dwhRootPrefix should be set!");
+        !Strings.isNullOrEmpty(dwhRootPrefix), "dwhRootPrefix is required!");
     Preconditions.checkState(fhirVersion != null, "FhirVersion cannot be empty");
 
     if (!Strings.isNullOrEmpty(dbConfig)) {
@@ -144,6 +143,7 @@ public class DataProperties {
       logger.info("Using FHIR-search mode since dbConfig is not set.");
     }
     Preconditions.checkState(!createHiveResourceTables || !thriftserverHiveConfig.isEmpty());
+    Preconditions.checkState(!createHiveResourceTables || createParquetDwh);
   }
 
   private PipelineConfig.PipelineConfigBuilder addFlinkOptions(FhirEtlOptions options) {
